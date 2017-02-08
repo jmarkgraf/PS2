@@ -1,7 +1,7 @@
 # R Programming
 # Problem Set 2: Functions 
 # Author: Jonas Markgraf
-# Contributor: Hyunjoo Oh
+# Date: Feb 2017
 # =========================
 
 
@@ -14,45 +14,69 @@ prop_vote <- sample(1:1000000, size=100000)
 
 
 # create function for "m" and "d" statistic -------------------------
-violations <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "d" statistic
+violations <- function(x, m = TRUE, d = TRUE) {
+  # Function name: violations()
+  # Purpose: function tests Benfords law by calculating Leemis m and ChoGains d
+  # Function: 
+  #   1) extracts first digit of the input vector "x" and generates an observed prop frequency vector
+  #   2) applies  Leemis m function and/or Cho Gains d function to prop frequency vector
+  #   3) returns list with test statistic and full digit distribution
+  #   User option to only calculate m, d or both statistics
+  # Args:
+  #   x: random numeric vector
+  #   m: logical vector; if TRUE, Leemis m is calculated; default value, TRUE
+  #   d: logical vector; if TRUE, ChoGains d is calculated; default value, TRUE
+  # Author: Jonas Markgraf
   first.digit <- substr(as.character(x), start = 1, stop = 1) # extract first digit of prop_vote vector
   first.digit <- as.integer(first.digit)
   Xi <- table(first.digit)/length(prop_vote) # generate observed proportional frequency vector
   if(m == T & d == F) {
-    m = max(Xi - log10(1 + (1/c(1:9)))) # calculating "m" statistic
-    return(list("Leemis' m" = m, distribtion = Xi))  # output1: if m == T & d == F, we only see "m" statistic
+    m = max(Xi - log10(1 + (1/c(1:9))))
+    return(list("Leemis' m" = m, distribution = Xi))  # output1: if m == T & d == F, we only see "m" statistic
   }
   if(d == T & m == F) {
-    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2)) # calculating "d" statistic
-    return(list("Cho-Gains' d" = d, distribtion = Xi)) # output2: if m == F & d == T, we only see "d" statistic
+    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2))
+    return(list("Cho-Gains' d" = d, distribution = Xi)) # output2: if m == F & d == T, we only see "d" statistic
   }
   if(d == T & m == T) {
-    m = max(Xi - log10(1 + (1/c(1:9)))) # calculating "m" statistic
-    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2)) # calculating "d" statistic
-    return(list("Leemis' m" = m, "Cho-Gains' d" = d, distribtion = Xi)) # output3: if m == T & d == T, we see both statisitics
+    m = max(Xi - log10(1 + (1/c(1:9))))
+    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2))
+    return(list("Leemis' m" = m, "Cho-Gains' d" = d, distribution = Xi)) # output3: if m == T & d == T, we see both statistics
   }
 }
 
 # testing function
 violations(prop_vote)
 violations(prop_vote, m = F)
-violations(prop_vote, d = F, m = F)
-
-
 
 ## 2) Critical Values
 ## ===================
 
 # create function for critical values ------------------
 
-print.benfords <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "d" statistic
+print.benfords <- function(x, m = TRUE, d = TRUE) {
+  # Function name: print.benfords()
+  # Purpose: function tests Benfords law (Leemis m; ChoGains d) and defines critical values for "no fraud"
+  # Function: 
+  ##   1) extracts first digit of the input vector "x"; 
+  ###       generates an observed prop frequency vector;
+  ###       generates vector "significance" defining the levels of stat significance 
+  ##   2) applies  Leemis m function and/or Cho Gains d function to prop frequency vector
+  ##   3) defines critical values for Leemis m and ChoGains d for "no fraud" (no asterisks - no fraud)
+  ##   4) returns list with test statistic and a definition of the stat. significance levels
+  ##   User option to only calculate m, d or both statistics
+  # Args:
+  ##   x: random numeric vector
+  ##   m: logical vector; if TRUE, Leemis m is calculated; default value, TRUE
+  ##   d: logical vector; if TRUE, ChoGains d is calculated; default value, TRUE
+  # Author: Jonas Markgraf
   first.digit <- substr(as.character(x), start = 1, stop = 1) # extract first digit of prop_vote vector
   first.digit <- as.integer(first.digit)
   Xi <- table(first.digit)/length(x) # generate observed proportional frequency vector
-  significance <- "* 10%; ** 5%; *** 1%" # vecto explaining asterisks
+  significance <- "* 10%; ** 5%; *** 1%" # vector explaining asterisks
 
   if(m == T & d == F) {
-    m = max(Xi - log10(1 + (1/c(1:9)))) # calculating "m" statistic
+    m = max(Xi - log10(1 + (1/c(1:9))))
     m <- if(m >= 1.212) { # add asterisks for critical values of "m" statistic
       paste0(m, "***")
     } else if(m >= .967) {
@@ -68,7 +92,7 @@ print.benfords <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "
     
   }
   if(d == T & m == F) {
-    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2)) # calculating "d" statistic
+    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2))
     d <- if(d >= 1.569) { # add asterisks for critical values of "d" statistic
       paste0(d, "***")
     } else if(d >= 1.33) {
@@ -84,7 +108,7 @@ print.benfords <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "
   }
   
   if(d == T & m == T) {
-    m = max(Xi - log10(1 + (1/c(1:9)))) # calculating "m" statistic
+    m = max(Xi - log10(1 + (1/c(1:9))))
     m <- if(m >= 1.212) { # add asterisks for critical values of "m" statistic
       paste0(m, "***")
     } else if(m >= .967) {
@@ -95,7 +119,7 @@ print.benfords <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "
       m
     }
     
-    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2)) # calculating "d" statistic
+    d = sqrt(sum(Xi - log10(1 + (1/c(1:9)))^2))
     d <- if(d >= 1.569) { # add asterisks for criticl values of "d" statistic
       paste0(d, "***")
     } else if(d >= 1.33) {
@@ -115,31 +139,44 @@ print.benfords <- function(x, m = TRUE, d = TRUE) { # by default, give "m" and "
 print.benfords(prop_vote)
 print.benfords(prop_vote, d = F)
 
-## Create function that creates CSV file containing table -------------
-
-<<<<<<< HEAD
-getwd()
-setwd("/Users/hyunjoooh/Dropbox/2017_Spring_Washu/Stat_Prog/ProblemSet")
-export.benfords <- function(x){
-  benfords.table <- data.frame(print.benfords(x))
-  print(benfords.table)
-  sink(file = "benfords_output.csv")
-=======
+## 3) Create function that creates CSV file containing table -------------
+## ===========================================================
 
 export.benfords2 <- function(x, name = "benfords_output2.csv") {
+  # Function name: export.benfords2()
+  # Purpose: Write CSV file with result from "print.benfords" defined above
+  # Function:
+  ##  1) applies input "x" to "print.benfords" function;
+  ##  2) writes output as csv file in the directory defined in "paste0"
+  ##  Name of the file can be defined with the "name" option
+  # Args:
+  ##   x: any numeric vector
+  ##   name: default name of output is "benfords_output2.csv"; can be changed
+  # Author: Jonas Markgraf
   write.csv(print.benfords(x), paste0("~/Dropbox/Hertie School/(4) Applied Statistical Programming (WUSTL)/Repositories/PS2/", name))
-} # this works...
+} 
 
+# testing function
 export.benfords2(prop_vote)
 
-
+## I tried to use the sink function (see below), but the output file is empty. ------
 
 export.benfords <- function(x, name = "benfords_output.csv") {
+  # Function name: export.benfords()
+  # Purpose: Write CSV file with result from "print.benfords" defined above
+  # Function steps:
+  ##  1) defines where to divert the output of the function to; directory defined in "paste0"; 
+  ##  2) applies input "x" to "print.benfords" function;
+  ##  3) sinks output to defined directory
+  ##  Name of the output file can be defined with the "name" option
+  # Args:
+  ##   x: any numeric vector
+  ##   name: default name of output is "benfords_output.csv"
+  # Author: Jonas Markgraf
   sink(paste0("~/Dropbox/Hertie School/(4) Applied Statistical Programming (WUSTL)/Repositories/PS2/", name))
   print.benfords(x)
-  sink() # prints empty csv file...
->>>>>>> origin/master
+  sink()
 }
-export.benfords(prop_vote)
 
-export.benfords(prop_vote)
+# testing function
+export.benfords(prop_vote) # prints empty csv file...
