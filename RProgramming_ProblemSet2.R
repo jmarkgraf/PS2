@@ -18,14 +18,14 @@ violations <- function(x, m = TRUE, d = TRUE) {
   # Function name: violations()
   # Purpose: function tests Benfords law by calculating Leemis m and ChoGains d
   # Function: 
-  #   1) extracts first digit of the input vector "x" and generates an observed prop frequency vector
-  #   2) applies  Leemis m function and/or Cho Gains d function to prop frequency vector
-  #   3) returns list with test statistic and full digit distribution
-  #   User option to only calculate m, d or both statistics
+  ##  1) extracts first digit of the input vector "x" and generates an observed prop frequency vector
+  ##  2) applies  Leemis m function and/or Cho Gains d function to prop frequency vector
+  ##  3) returns list with test statistic and full digit distribution
+  ##  User option to only calculate m, d or both statistics
   # Args:
-  #   x: random numeric vector
-  #   m: logical vector; if TRUE, Leemis m is calculated; default value, TRUE
-  #   d: logical vector; if TRUE, ChoGains d is calculated; default value, TRUE
+  ##  x: random numeric vector
+  ##  m: logical vector; if TRUE, Leemis m is calculated; default value, TRUE
+  ##  d: logical vector; if TRUE, ChoGains d is calculated; default value, TRUE
   # Author: Jonas Markgraf
   first.digit <- substr(as.character(x), start = 1, stop = 1) # extract first digit of prop_vote vector
   first.digit <- as.integer(first.digit)
